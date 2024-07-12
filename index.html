@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/octocat.png"
+    />
+    <title>GitHub User Search App</title>
+
+    <link rel="stylesheet" href="output.css" />
+
+    <script src="script.js" defer></script>
+  </head>
+  <body
+    class="font-mono bg-slate-100 text-xs transition-colors duration-500 ease-out dark:bg-slate-900"
+  >
+    <div class="flex min-h-dvh items-center justify-center">
+      <main
+        class="relative grid w-[90%] gap-4 text-slate-500 sm:w-[70%] xl:w-1/2"
+      >
+        <header class="flex items-center justify-between px-2">
+          <h1
+            class="text-[1.625rem] font-semibold sm:text-[2rem] dark:text-white"
+          >
+            <a href="#">devfinder</a>
+          </h1>
+          <button id="themeSwitch" class="flex items-center p-2">
+            <img
+              id="themeIcon"
+              src="assets/icon-moon.svg"
+              alt="Theme Switcher"
+            />
+          </button>
+        </header>
+        <p
+          id="userNotFound"
+          class="absolute right-0 top-8 hidden text-sm font-bold text-red-500"
+        >
+          User not found
+        </p>
+        <div
+          class="flex items-center rounded-2xl bg-white p-2 text-sm shadow-lg sm:text-lg dark:bg-slate-700"
+        >
+          <div class="mr-2 sm:mx-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              class="size-6 stroke-blue-600 sm:size-7 dark:stroke-blue-500"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </div>
+          <input
+            id="searchArea"
+            type="search"
+            placeholder="Search GitHub Username..."
+            autocomplete="off"
+            class="w-full bg-inherit outline-none placeholder:tracking-tighter placeholder:text-slate-500 sm:placeholder:tracking-normal dark:placeholder:text-white"
+          />
+          <button
+            id="searchButton"
+            class="ml-4 rounded-lg bg-blue-500 p-3 text-sm font-semibold text-white sm:text-base"
+          >
+            Search
+          </button>
+        </div>
+
+        <div
+          id="userInformationContainer"
+          class="hidden rounded-2xl bg-white p-4 shadow-lg sm:p-8 md:p-10 lg:gap-8 lg:p-12 dark:bg-slate-700 dark:text-white"
+        >
+          <div class="hidden lg:block lg:max-w-[7.5rem]">
+            <img
+              id="profileImg"
+              class="lg:rounded-full"
+              src="assets/octocat.png"
+              alt="user profile image"
+            />
+          </div>
+          <div class="w-full">
+            <div class="flex gap-4 sm:gap-8 lg:gap-0">
+              <div>
+                <img
+                  id="profileImgMobile"
+                  class="max-h-[4.375rem] rounded-full sm:max-h-[7.5rem] lg:hidden"
+                  src="assets/octocat.png"
+                  alt="user profile image"
+                />
+                <div class="flex flex-col items-center gap-0"></div>
+              </div>
+              <div
+                class="flex flex-1 flex-col justify-center sm:gap-2 lg:flex-row lg:justify-between"
+              >
+                <div>
+                  <p
+                    id="userName"
+                    class="text-xl font-bold text-slate-900 sm:text-[1.625rem] dark:text-white"
+                  >
+                    The Octocat
+                  </p>
+                  <a
+                    id="userId"
+                    class="text-sm text-blue-600 sm:text-base dark:text-blue-500"
+                    href="https://github.com/octocat"
+                    target="_blank"
+                    >@octocat</a
+                  >
+                </div>
+                <div class="flex gap-2 text-sm sm:text-base">
+                  <p>Joined</p>
+                  <p id="joinDate">25</p>
+                  <p id="joinMonth">Jan</p>
+                  <p id="joinYear">2011</p>
+                </div>
+              </div>
+            </div>
+            <p
+              id="userBio"
+              class="mt-6 text-sm leading-6 tracking-tighter opacity-75 sm:text-base sm:tracking-normal"
+            >
+              This profile has no bio
+            </p>
+            <div
+              class="my-8 grid grid-flow-col justify-around rounded-2xl bg-slate-100 p-4 text-sm sm:justify-around sm:px-[2rem] sm:py-[1.125rem] sm:text-base md:justify-between dark:bg-slate-900"
+            >
+              <button type="button" id="reposButton">
+                <p>Repos</p>
+                <p
+                  id="userRepo"
+                  class="mt-3 text-left text-lg font-bold text-slate-900 sm:text-[1.375rem] dark:text-white"
+                >
+                  8
+                </p>
+              </button>
+              <div>
+                <p>Followers</p>
+                <p
+                  id="userFollowers"
+                  class="mt-3 text-lg font-bold text-slate-900 sm:text-[1.375rem] dark:text-white"
+                >
+                  3938
+                </p>
+              </div>
+              <div>
+                <p>Following</p>
+                <p
+                  id="userFollowing"
+                  class="mt-3 text-lg font-bold text-slate-900 sm:text-[1.375rem] dark:text-white"
+                >
+                  9
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 sm:text-base"
+            >
+              <div class="flex items-center gap-4">
+                <div class="flex size-5 justify-center">
+                  <img src="assets/icon-location.svg" alt="location logo" />
+                </div>
+                <p id="userLocation">San Fransisco</p>
+              </div>
+              <div class="flex items-center gap-4">
+                <img src="assets/icon-website.svg" alt="website logo" />
+                <p>
+                  <a href="https://github.blog" target="_blank" id="userWebsite"
+                    >github.blog</a
+                  >
+                </p>
+              </div>
+              <div
+                class="col-end-2 flex items-center gap-4 sm:col-start-2 sm:col-end-3 sm:row-start-1 sm:row-end-2"
+              >
+                <img src="assets/x-twitter.svg" alt="user twitter name" />
+                <p>
+                  <a id="userTwitterName" href="https://x.com" target="_blank"
+                    >Not available</a
+                  >
+                </p>
+              </div>
+              <div class="flex items-center gap-4">
+                <img src="assets/icon-company.svg" alt="company logo" />
+                <p id="userCompany">@github</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
