@@ -12,32 +12,63 @@ themeButton.addEventListener("click", () => {
   }
 });
 
-// Get the search input and button elements
+// search input and button elements
 const searchInput = document.getElementById("searchArea");
 const searchButton = document.getElementById("searchButton");
 const reposButton = document.getElementById("reposButton");
-reposButton.addEventListener("click", () => {
-  window.open(userId + "?tab=repositories", "_blank");
+
+document.addEventListener("DOMContentLoaded", () => {
+  searchInput.addEventListener("input", debounce(handleInput, 300));
 });
 
-// Add an event listener to the search button
+// event listener to the search button
 searchButton.addEventListener("click", searchUser);
 
-// Add an event listener for the 'Enter' key on the search input
+// event listener for the 'Enter' key on the search input
 searchInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     searchUser();
   }
 });
 
+reposButton.addEventListener("click", () => {
+  window.open(userId + "?tab=repositories", "_blank");
+});
+
+let timeout = null;
+
+function debounce(func, wait) {
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+async function suggestions(query) {
+  const response = await fetch(
+    `https://api.github.com/search/users?q=${query}`,
+  );
+  const data = await response.json();
+  return data.items;
+}
+
+async function handleInput(event) {
+  const query = event.target.value;
+  if (query.length > 0) {
+    const users = await suggestions(query);
+    const suggestions = users.map((user) => `<li>${user.login}</li>`).join("");
+    document.getElementById("suggestions").innerHTML = suggestions;
+  } else {
+    document.getElementById("suggestions").innerHTML = "";
+  }
+}
+
 function searchUser() {
-  // Get the user name from the search input and remove any spaces
   let userName = searchInput.value.split(" ").join("");
 
-  // Get the 'user not found' element
   const userNotFound = document.getElementById("userNotFound");
 
-  // Send a request to the GitHub API to get information about the user
+  // request to the GitHub API
   fetch("https://api.github.com/users/" + userName)
     .then((response) => {
       // If the response is OK, hide the 'user not found' message and return the response JSON
@@ -56,17 +87,14 @@ function searchUser() {
       }
     })
     .then((data) => {
-      // Get the name from the response data and populate it on the user name
       let name = data.name;
       let userName = document.getElementById("userName");
       userName.innerText = name;
 
-      // Get the avatar from the response data and populate it on the profile img
       let profileImg = data.avatar_url;
       document.getElementById("profileImg").src = profileImg;
       document.getElementById("profileImgMobile").src = profileImg;
 
-      // Get the join date from the response data, format it, and populate the join date details on the page
       let joinFullDate = data.created_at;
       let dateStr = joinFullDate.substring(0, 10);
       let dateSplit = dateStr.split("-");
@@ -83,18 +111,15 @@ function searchUser() {
       joinMonth.textContent = monthName;
       joinYear.textContent = dateSplit[0];
 
-      // Get the user id and user id URL from the response data and populate it on the user id
       let userId = data.login;
       let userIdUrl = data.html_url;
       document.getElementById("userId").textContent = "@" + userId;
       document.getElementById("userId").href = userIdUrl;
 
-      // Get the bio from the response data and populate it on the user bio
       let bio = data.bio;
       let userBio = document.getElementById("userBio");
       userBio.textContent = bio;
 
-      // Get the repos, followers and following from the response data and populate it on the user repos, user followers and user following respectively
       let publicRepos = data.public_repos;
       let following = data.following;
       let followers = data.followers;
@@ -106,7 +131,6 @@ function searchUser() {
       let userFollowing = document.getElementById("userFollowing");
       userFollowing.textContent = following;
 
-      // Get the location from the response data and populate it on the user location
       let location = data.location;
       const userLocation = document.getElementById("userLocation");
       if (location === null) {
@@ -115,7 +139,6 @@ function searchUser() {
         userLocation.textContent = location;
       }
 
-      // Get the twitter user name from the response data and populate it on the user twitter name
       let twitterUsername = data.twitter_username;
       let userTwitterName = document.getElementById("userTwitterName");
       if (twitterUsername === null) {
@@ -125,7 +148,6 @@ function searchUser() {
         userTwitterName.href = "https://twitter.com/" + twitterUsername;
       }
 
-      // Get the company name from the response data and populate it on the user company name
       let company = data.company;
       let userCompany = document.getElementById("userCompany");
       if (company === null) {
@@ -134,7 +156,6 @@ function searchUser() {
         userCompany.textContent = company;
       }
 
-      // Get the blog URL from the response data and populate it on the user website
       let blogURL = data.blog;
       let userWebsite = document.getElementById("userWebsite");
       if (blogURL === "") {
@@ -144,7 +165,6 @@ function searchUser() {
       } else {
         userWebsite.innerText = blogURL;
         userWebsite.href = "https://" + blogURL;
-        userWebsite.setAttribute("target:_blank");
       }
     });
 }
