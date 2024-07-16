@@ -44,7 +44,7 @@ function debounce(func, wait) {
   };
 }
 
-async function suggestions(query) {
+async function getSuggestions(query) {
   const response = await fetch(
     `https://api.github.com/search/users?q=${query}`,
   );
@@ -55,7 +55,7 @@ async function suggestions(query) {
 async function handleInput(event) {
   const query = event.target.value;
   if (query.length > 0) {
-    const users = await suggestions(query);
+    const users = await getSuggestions(query);
     const suggestions = users.map((user) => `<li>${user.login}</li>`).join("");
     document.getElementById("suggestions").innerHTML = suggestions;
   } else {
@@ -76,6 +76,7 @@ function searchUser() {
         userNotFound.style.display = "none";
         document.getElementById("userInformationContainer").style.display =
           "flex";
+        document.getElementById("suggestions").style.display = "none";
         return response.json();
       }
       // If the response is not OK, show the 'user not found' message and throw an error
@@ -83,6 +84,7 @@ function searchUser() {
         userNotFound.style.display = "block";
         document.getElementById("userInformationContainer").style.display =
           "none";
+        document.getElementById("suggestions").style.display = "block";
         throw new Error("User not found.");
       }
     })
